@@ -4,7 +4,7 @@ use anchor_lang::solana_program::entrypoint::ProgramResult;
 declare_id!("fbtNRKYVE6xnEoCdmJ75QKnuvcxZNZ2J3HZ12F9wLZD");
 
 #[program]
-pub mod blog_sol {
+pub mod coffee_on_the_blockchain {
 
     use super::*;
 
@@ -19,12 +19,18 @@ pub mod blog_sol {
         Ok(())
     }
 
-    pub fn signup_user(ctx: Context<SignupUser>, name: String, avatar: String) -> ProgramResult {
+    pub fn signup_user(
+        ctx: Context<SignupUser>,
+        name: String,
+        avatar: String,
+        usertype: u8,
+    ) -> ProgramResult {
         let user_account = &mut ctx.accounts.user_account;
         let authority = &mut ctx.accounts.authority;
 
         user_account.name = name;
         user_account.avatar = avatar;
+        user_account.usertype = usertype;
         user_account.authority = authority.key();
 
         Ok(())
@@ -56,6 +62,7 @@ pub mod blog_sol {
         ctx: Context<CreateFarmer>,
         title: String,
         content: String,
+        dateandtime: u64,
     ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
@@ -64,6 +71,7 @@ pub mod blog_sol {
 
         post_account.title = title;
         post_account.content = content;
+        post_account.dateandtime = dateandtime;
         post_account.user = user_account.key();
         post_account.authority = authority.key();
         post_account.pre_post_key = blog_account.current_post_key;
@@ -340,6 +348,7 @@ pub struct BlogState {
 pub struct UserState {
     pub name: String,
     pub avatar: String,
+    pub usertype: u8,
     pub authority: Pubkey,
 }
 
@@ -347,6 +356,7 @@ pub struct UserState {
 pub struct PostState {
     title: String,
     content: String,
+    dateandtime: u64,
     user: Pubkey,
     pub pre_post_key: Pubkey,
     pub authority: Pubkey,
