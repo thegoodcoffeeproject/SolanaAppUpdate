@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::ProgramResult;
 
-declare_id!("GugxcEn4R7brqcC71J4kWR9iNH7Ge7GJs2Ci6YEfJki");
+declare_id!("fbtNRKYVE6xnEoCdmJ75QKnuvcxZNZ2J3HZ12F9wLZD");
 
 #[program]
 pub mod blog_sol {
@@ -52,7 +52,11 @@ pub mod blog_sol {
 
         Ok(())
     }
-    pub fn create_post1(ctx: Context<CreatePost1>, title: String, content: String) -> ProgramResult {
+    pub fn create_farmer(
+        ctx: Context<CreateFarmer>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -74,7 +78,11 @@ pub mod blog_sol {
 
         Ok(())
     }
-    pub fn create_post2(ctx: Context<CreatePost2>, title: String, content: String) -> ProgramResult {
+    pub fn create_processing(
+        ctx: Context<CreateProcessing>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -96,7 +104,11 @@ pub mod blog_sol {
 
         Ok(())
     }
-    pub fn create_post3(ctx: Context<CreatePost3>, title: String, content: String) -> ProgramResult {
+    pub fn create_logistics(
+        ctx: Context<CreateLogistics>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -118,7 +130,11 @@ pub mod blog_sol {
 
         Ok(())
     }
-    pub fn create_post4(ctx: Context<CreatePost4>, title: String, content: String) -> ProgramResult {
+    pub fn create_warehousing(
+        ctx: Context<CreateWarehousing>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -140,7 +156,11 @@ pub mod blog_sol {
 
         Ok(())
     }
-    pub fn create_post5(ctx: Context<CreatePost5>, title: String, content: String) -> ProgramResult {
+    pub fn create_distribution(
+        ctx: Context<CreateDistribution>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
         let blog_account = &mut ctx.accounts.blog_account;
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -162,8 +182,33 @@ pub mod blog_sol {
 
         Ok(())
     }
-   
 
+    pub fn create_retail(
+        ctx: Context<CreateRetail>,
+        title: String,
+        content: String,
+    ) -> ProgramResult {
+        let blog_account = &mut ctx.accounts.blog_account;
+        let post_account = &mut ctx.accounts.post_account;
+        let user_account = &mut ctx.accounts.user_account;
+        let authority = &mut ctx.accounts.authority;
+
+        post_account.title = title;
+        post_account.content = content;
+        post_account.user = user_account.key();
+        post_account.authority = authority.key();
+        post_account.pre_post_key = blog_account.current_post_key;
+
+        blog_account.current_post_key = post_account.key();
+
+        emit!(PostEvent {
+            label: "CREATE".to_string(),
+            post_id: post_account.key(),
+            next_post_id: None
+        });
+
+        Ok(())
+    }
 
 }
 
@@ -192,7 +237,7 @@ pub struct CreatePost<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost1<'info> {
+pub struct CreateFarmer<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
@@ -205,7 +250,7 @@ pub struct CreatePost1<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost2<'info> {
+pub struct CreateProcessing<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
@@ -218,7 +263,7 @@ pub struct CreatePost2<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost3<'info> {
+pub struct CreateLogistics<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
@@ -231,7 +276,7 @@ pub struct CreatePost3<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost4<'info> {
+pub struct CreateWarehousing<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
@@ -244,7 +289,7 @@ pub struct CreatePost4<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost5<'info> {
+pub struct CreateDistribution<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
@@ -257,7 +302,7 @@ pub struct CreatePost5<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreatePost6<'info> {
+pub struct CreateRetail<'info> {
     #[account(init, payer = authority, space = 8 + 50 + 500 + 32 + 32 + 32 + 32 + 32 + 32)]
     pub post_account: Account<'info, PostState>,
     #[account(mut, has_one = authority)]
