@@ -1,7 +1,3 @@
-Sure, here's a template for a README file for your Solana smart contract for coffee on the blockchain:
-
----
-
 # Coffee Blockchain Smart Contract
 
 This repository contains a smart contract deployed on the Solana blockchain for managing coffee-related transactions. The smart contract facilitates the buying, selling, and tracking of coffee using blockchain technology.
